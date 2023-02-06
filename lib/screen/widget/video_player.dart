@@ -4,7 +4,12 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   const VideoPlayerWidget(
-      {super.key, required this.videoPlayerController, required this.looping, required this.autoplay});
+      {super.key,
+      required this.id,
+      required this.videoPlayerController,
+      required this.looping,
+      required this.autoplay});
+  final int id;
   final VideoPlayerController videoPlayerController;
   final bool looping;
   final bool autoplay;
@@ -29,7 +34,7 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         return Center(
           child: Text(
             errorMessage,
-            style: TextStyle(color: Colors.white),
+            style: const TextStyle(color: Colors.black),
           ),
         );
       },
