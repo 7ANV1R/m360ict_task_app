@@ -4,13 +4,9 @@ import 'package:video_player/video_player.dart';
 
 class VideoPlayerWidget extends StatefulWidget {
   const VideoPlayerWidget(
-      {super.key,
-      required this.id,
-      required this.videoPlayerController,
-      required this.looping,
-      required this.autoplay});
+      {super.key, required this.id, required this.videoUrl, required this.looping, required this.autoplay});
   final int id;
-  final VideoPlayerController videoPlayerController;
+  final String videoUrl;
   final bool looping;
   final bool autoplay;
 
@@ -19,15 +15,23 @@ class VideoPlayerWidget extends StatefulWidget {
 }
 
 class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
-  late ChewieController _chewieController;
+  late VideoPlayerController videoPlayerController;
+  ChewieController? _chewieController;
 
   @override
   void initState() {
     super.initState();
+    initPlayer();
+  }
+
+  initPlayer() async {
+    videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    await videoPlayerController.initialize();
     _chewieController = ChewieController(
-      videoPlayerController: widget.videoPlayerController,
-      aspectRatio: 9 / 16,
-      autoInitialize: false,
+      videoPlayerController: videoPlayerController,
+      aspectRatio: 16 / 9,
+      autoInitialize: true,
+      showControlsOnInitialize: false,
       autoPlay: widget.autoplay,
       looping: widget.looping,
       errorBuilder: (context, errorMessage) {
@@ -39,15 +43,27 @@ class _VideoPlayerWidgetState extends State<VideoPlayerWidget> {
         );
       },
     );
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    videoPlayerController.dispose();
+    _chewieController?.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Chewie(
-        controller: _chewieController,
-      ),
-    );
+    return _chewieController != null
+        ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Chewie(
+              controller: _chewieController!,
+            ),
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 }

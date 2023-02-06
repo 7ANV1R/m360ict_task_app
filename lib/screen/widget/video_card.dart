@@ -4,7 +4,6 @@ import 'package:task_app/core/ui_helper.dart';
 import 'package:task_app/data/model/video_model.dart';
 import 'package:task_app/screen/widget/video_player.dart';
 import 'package:task_app/util/datetime_formatter.dart';
-import 'package:video_player/video_player.dart';
 
 import '../../core/icon_value.dart';
 
@@ -55,9 +54,7 @@ class _VideoCardState extends ConsumerState<VideoCard> {
               aspectRatio: 16 / 9,
               child: VideoPlayerWidget(
                 id: widget.video.id,
-                videoPlayerController: VideoPlayerController.network(
-                  widget.video.videoUrl,
-                ),
+                videoUrl: widget.video.videoUrl,
                 autoplay: false,
                 looping: true,
               ),

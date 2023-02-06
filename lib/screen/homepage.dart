@@ -12,32 +12,8 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videoData = ref.watch(videoDataProvider);
-    return Scaffold(
-      body: videoData.when(
-        data: (data) {
-          return HomeView(videos: data);
-        },
-        error: (error, stackTrace) {
-          return Center(
-            child: Text('Oopss! $error'),
-          );
-        },
-        loading: () => const Center(
-          child: CircularProgressIndicator.adaptive(),
-        ),
-      ),
-    );
-  }
-}
-
-class HomeView extends ConsumerWidget {
-  const HomeView({super.key, required this.videos});
-  final List<VideoModel> videos;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
     var textTheme = Theme.of(context).textTheme;
+    final videoData = ref.watch(videoDataProvider);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -67,13 +43,35 @@ class HomeView extends ConsumerWidget {
           ),
         ],
       ),
-      body: ListView.separated(
-        itemCount: videos.length,
-        itemBuilder: (context, index) => VideoCard(
-          video: videos[index],
+      body: videoData.when(
+        data: (data) {
+          return HomeView(videos: data);
+        },
+        error: (error, stackTrace) {
+          return Center(
+            child: Text('Oopss! $error'),
+          );
+        },
+        loading: () => const Center(
+          child: CircularProgressIndicator.adaptive(),
         ),
-        separatorBuilder: (context, index) => kVerticalSpaceM,
       ),
+    );
+  }
+}
+
+class HomeView extends ConsumerWidget {
+  const HomeView({super.key, required this.videos});
+  final List<VideoModel> videos;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ListView.separated(
+      itemCount: videos.length,
+      itemBuilder: (context, index) => VideoCard(
+        video: videos[index],
+      ),
+      separatorBuilder: (context, index) => kVerticalSpaceM,
     );
   }
 }
